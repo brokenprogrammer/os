@@ -110,5 +110,5 @@ void kernel_main(void)
 	terminal_initialize();
  
 	/* Newline support is left as an exercise. */
-	terminal_writestring("Welcome to Oskar OS.\n");
+	terminal_writestring("Welcome to Developer OS.\n");
 }
