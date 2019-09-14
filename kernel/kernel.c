@@ -96,7 +96,18 @@ void terminal_putchar(char c)
 void terminal_write(const char* data, size_t size) 
 {
 	for (size_t i = 0; i < size; i++)
-		terminal_putchar(data[i]);
+	{
+		if (data[i] == '\n')
+		{
+			terminal_row += 1;
+			terminal_column = 0;
+			i++; // account for additional character in the buffer
+		}
+		else
+		{
+			terminal_putchar(data[i]);
+		}
+	}
 }
  
 void terminal_writestring(const char* data) 
@@ -110,5 +121,7 @@ void kernel_main(void)
 	terminal_initialize();
  
 	/* Newline support is left as an exercise. */
-	terminal_writestring("Welcome to Developer OS. This is a super long line that should automatically break to a new row when it hits the end of the terminal. If it doesn't something is wrong!\n");
+	terminal_writestring("Welcome to Developer OS.\n");
+	terminal_writestring("This is a super long line that should automatically break to a new row when it hits the end of the terminal. If it doesn't something is wrong!\n");
+	terminal_writestring("This\n should\n handle\n the\n newline\n character.\n");
 }
