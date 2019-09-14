@@ -1,6 +1,6 @@
 #include <stddef.h>		// NOTE(Oskar): Helper defines, size_t 
 #include <stdint.h>		// NOTE(Oskar): Integer defines, int8_t, int32_t etc..
- 
+
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
@@ -24,6 +24,23 @@ typedef uint32_t 		u32;
 typedef int64_t 		s64;
 typedef uint64_t 		u64;
 typedef s32 			b32;
+
+#define internal 		static
+#define local_persist 	static
+#define global_variable static
+
+// TODO(Oskar): This should be placed somewhere else
+void *memset(void *BufferPointer, int Value, size_t Size)
+{
+	ubyte *Buffer = (ubyte *)BufferPointer;
+	for (size_t Index = 0; Index < Size; ++Index)
+	{
+		Buffer[Index] = (ubyte)Value;
+	}
+	return BufferPointer;
+}
+
+#include "kheap.c"
 
 /* Hardware text mode color constants. */
 enum vga_color {
