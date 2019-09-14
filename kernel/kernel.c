@@ -1,6 +1,5 @@
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
+#include <stddef.h>		// NOTE(Oskar): Helper defines, size_t 
+#include <stdint.h>		// NOTE(Oskar): Integer defines, int8_t, int32_t etc..
  
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -11,7 +10,21 @@
 #if !defined(__i386__)
 #error "This tutorial needs to be compiled with a ix86-elf compiler"
 #endif
- 
+
+typedef float			r32; // TODO(Oskar): Better naming for floating point?
+typedef double			r64;
+typedef unsigned char 	ubyte;
+typedef unsigned int 	uint;
+typedef int8_t 			s8;
+typedef uint8_t 		u8;
+typedef int16_t 		s16;
+typedef uint16_t 		u16;
+typedef int32_t 		s32;
+typedef uint32_t 		u32;
+typedef int64_t 		s64;
+typedef uint64_t 		u64;
+typedef s32 			b32;
+
 /* Hardware text mode color constants. */
 enum vga_color {
 	VGA_COLOR_BLACK = 0,
