@@ -143,24 +143,20 @@ void terminal_writestring(const char* data)
 	terminal_write(data, strlen(data));
 }
 
-#include "kheap.c"
-#include "descriptor_tables.c"
-#include "interrupt_service_routine.c"
-
+#include "idt.c"
+#include "interrupt.c"
 
 void kernel_main(void) 
 {
 	/* Initialize terminal interface */
 	terminal_initialize();
- 
-	initialize_gdt();
-	initialize_idt();
+	
+	idt_initialize();
 
- 
 	/* Newline support is left as an exercise. */
 	terminal_writestring("Welcome to Developer OS.\n");
 	terminal_writestring("This is a super long line that should automatically break to a new row when it hits the end of the terminal. If it doesn't something is wrong!\n");
 	terminal_writestring("This\n should\n handle\n the\n newline\n character.\n");
 
-	asm volatile ("int $0x3");
+	asm volatile ("int $0x3"); // NOTE(Oskar): Triggers an ISR interrupt.
 }
