@@ -1,3 +1,4 @@
+// ripped from https://wiki.osdev.org/Printing_To_Screen#Printing_Integers
 char * itoa( int value, char * str, int base )
 {
     char * rc;
