@@ -114,11 +114,14 @@ void terminal_write(const char* data, size_t size)
 		switch (data[i])
 		{
 			case '\n':
+			{
 				terminal_row += 1;
 				terminal_column = 0;
 
 				break;
+			}
 			case '\t':
+			{
 				terminal_column += 4;
 
 				if (terminal_column >= VGA_WIDTH)
@@ -128,9 +131,12 @@ void terminal_write(const char* data, size_t size)
 				}
 
 				break;
+			}
 			default:
+			{
 				terminal_putchar(data[i]);
 				break;
+			}
 		}
 
 		if (terminal_row + 1 >= VGA_HEIGHT)
