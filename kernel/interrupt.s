@@ -1,77 +1,114 @@
-.intel_syntax
-.macro ISR_NOERRCODE p
-    .globl isr\p
-    isr\p:
-    cli
-    push 0
-    push \p
-    jmp isr_common_stub
+.macro isr id
+    .global isr\id
+    .type isr\id, @function
+    isr\id:
+        pushl $0 # err_code
+        pushl $\id # int_no
+        jmp interrupt_handler_prepare
+    .size isr\id, . - isr\id
 .endm
 
-.macro ISR_ERRCODE p
-    .globl isr\p
-    isr\p:
-        cli
-        push \p
-        jmp isr_common_stub
+.macro isr_error id index
+    .global isr\id
+    .type isr\id, @function
+    isr\id:
+        # pushl $0 # err_code pushed by CPU
+        pushl $\id # int_no
+        jmp interrupt_handler_prepare
+    .size isr\id, . - isr\id
 .endm
 
-ISR_NOERRCODE p=0
-ISR_NOERRCODE p=1
-ISR_NOERRCODE p=2
-ISR_NOERRCODE p=3
-ISR_NOERRCODE p=4
-ISR_NOERRCODE p=5
-ISR_NOERRCODE p=6
-ISR_NOERRCODE p=7
-ISR_ERRCODE   p=8
-ISR_NOERRCODE p=9
-ISR_ERRCODE   p=10
-ISR_ERRCODE   p=11
-ISR_ERRCODE   p=12
-ISR_ERRCODE   p=13
-ISR_ERRCODE   p=14
-ISR_NOERRCODE p=15
-ISR_NOERRCODE p=16
-ISR_NOERRCODE p=17
-ISR_NOERRCODE p=18
-ISR_NOERRCODE p=19
-ISR_NOERRCODE p=20
-ISR_NOERRCODE p=21
-ISR_NOERRCODE p=22
-ISR_NOERRCODE p=23
-ISR_NOERRCODE p=24
-ISR_NOERRCODE p=25
-ISR_NOERRCODE p=26
-ISR_NOERRCODE p=27
-ISR_NOERRCODE p=28
-ISR_NOERRCODE p=29
-ISR_NOERRCODE p=30
-ISR_NOERRCODE p=31
+isr 0
+isr 1
+isr 2
+isr 3
+isr 4
+isr 5
+isr 6
+isr 7
+isr_error 8
+isr 9
+isr_error 10
+isr_error 11
+isr_error 12
+isr_error 13
+isr_error 14
+isr 15
+isr 16
+isr 17
+isr 18
+isr 19
+isr 20
+isr 21
+isr 22
+isr 23
+isr 24
+isr 25
+isr 26
+isr 27
+isr 28
+isr 29
+isr 30
+isr 31
+isr 32
 
-.extern isr_handler
+.extern interrupt_handler
 
-isr_common_stub:
-    pusha
+.type interrupt_handler_prepare, @function
+interrupt_handler_prepare:
+	pushl %eax
+	pushl %ecx
+	pushl %edx
+	pushl %ebx
+	pushl %ebp
+	pushl %esi
+	pushl %edi
 
-    mov %ax, %ds
-    push %eax
+	movl %ds, %ebp
+	pushl %ebp
+	movl %es, %ebp
+	pushl %ebp
+	movl %fs, %ebp
+	pushl %ebp
+	movl %gs, %ebp
+	pushl %ebp
 
-    mov %ax, 0x10
-    mov %ds, %ax
-    mov %es, %ax
-    mov %fs, %ax
-    mov %gs, %ax
+	movl $0x10 /* Kernel Data Segment */, %ebp
+	movl %ebp, %ds
+	movl %ebp, %es
+	movl %ebp, %fs
+	movl %ebp, %gs
 
-    call isr_handler
+	movl %cr2, %ebp
+	pushl %ebp
 
-    pop %ebx
-    mov %ds, %bx
-    mov %es, %bx
-    mov %fs, %bx
-    mov %gs, %bx
+	movl %esp, %ebx
+	subl $4, %esp
+	andl $0xFFFFFFF0, %esp /* 16-byte align stack */
+	movl %ebx, (%esp)
+	call interrupt_handler
+	movl %ebx, %esp
 
-    popa
-    add %esp, 8
-    sti
-    iret
+	popl %ebp
+	movl %ebp, %cr2
+
+	popl %ebp
+	movl %ebp, %gs
+	popl %ebp
+	movl %ebp, %fs
+	popl %ebp
+	movl %ebp, %es
+	popl %ebp
+	movl %ebp, %ds
+
+	popl %edi
+	popl %esi
+	popl %ebp
+	popl %ebx
+	popl %edx
+	popl %ecx
+	popl %eax
+
+	addl $8, %esp
+	iret
+.size interrupt_handler_prepare, . - interrupt_handler_prepare

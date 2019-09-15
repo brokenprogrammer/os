@@ -29,7 +29,7 @@ internal void idt_set_gate(u8 Num, u32 Base, u16 Sel, u8 Flags)
     IDTEntries[Num].Always0 = 0;
     // We must uncomment the OR below when we get to using user-mode.
     // It sets the interrupt gate's privilege level to 3.
-    IDTEntries[Num].Flags   = Flags /* | 0x60 */;
+    IDTEntries[Num].Flags   = Flags | 0x60 ;
 }
 
 internal void initialize_gdt()
