@@ -154,7 +154,7 @@ void terminal_writestring(const char* data)
 
 void terminal_writenumber(const size_t number)
 {
-  	char buffer [33]; // Would this cause a memory leak?
+  	char buffer [33];
 
   	const char * c = itoa(number, buffer, 10);
 
