@@ -2,6 +2,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "../libc/itoa.c"
+#include "../libc/memset.c"
+
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -30,17 +32,6 @@ typedef s32 			b32;
 #define internal 		static
 #define local_persist 	static
 #define global_variable static
-
-// TODO(Oskar): This should be placed somewhere else
-void *memset(void *BufferPointer, int Value, size_t Size)
-{
-	ubyte *Buffer = (ubyte *)BufferPointer;
-	for (size_t Index = 0; Index < Size; ++Index)
-	{
-		Buffer[Index] = (ubyte)Value;
-	}
-	return BufferPointer;
-}
 
 /* Hardware text mode color constants. */
 enum vga_color {
@@ -182,10 +173,10 @@ void terminal_writestring(const char* data)
 }
 
 void terminal_writenumber(const size_t number)
+{
   	char buffer [33];
 
   	const char * c = itoa(number, buffer, 10);
-{
 
 	terminal_writestring(c);
 }
@@ -210,5 +201,5 @@ void kernel_main(void)
 	
 	terminal_writenumber(11230);
 	terminal_writestring("A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ");
-  asm volatile ("int $0x3"); // NOTE(Oskar): Triggers an ISR interrupt.
+	asm volatile ("int $0x3"); // NOTE(Oskar): Triggers an ISR interrupt.
 }
