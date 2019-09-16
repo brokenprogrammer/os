@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "../libc/itoa.c"
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -151,6 +152,15 @@ void terminal_writestring(const char* data)
 	terminal_write(data, strlen(data));
 }
 
+void terminal_writenumber(const size_t number)
+{
+  	char buffer [33];
+
+  	const char * c = itoa(number, buffer, 10);
+
+	terminal_writestring(c);
+}
+
 void kernel_main(void)
 {
 	/* Initialize terminal interface */
@@ -161,5 +171,7 @@ void kernel_main(void)
 	terminal_writestring("This is a super long line that should automatically break to a new row when it hits the end of the terminal. If it doesn't something is wrong!\n");
 	terminal_writestring("This\n should\n handle\n the\n newline\n character.\n");
 	terminal_writestring("Tabbing\t like\t crazy.\t PS.\t switch\t is\t the\t best\t control\t flow\t operator\t in\t the\t C\t language\t.\n");
-	terminal_writestring("A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ");
+	terminal_writestring("A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ\n");
+	
+	terminal_writenumber(11230);
 }
