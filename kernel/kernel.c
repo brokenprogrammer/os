@@ -2,6 +2,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "../libc/itoa.c"
+#include "../libc/memset.c"
+
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -12,6 +14,24 @@
 #if !defined(__i386__)
 #error "This tutorial needs to be compiled with a ix86-elf compiler"
 #endif
+
+typedef float				r32;
+typedef double				r64;
+typedef unsigned char 		ubyte;
+typedef unsigned int 		uint;
+typedef int8_t 				s8;
+typedef uint8_t 			u8;
+typedef int16_t 			s16;
+typedef uint16_t 			u16;
+typedef int32_t 			s32;
+typedef uint32_t 			u32;
+typedef int64_t 			s64;
+typedef uint64_t 			u64;
+typedef s32 				b32;
+
+#define internal 		static
+#define local_persist 	static
+#define global_variable static
 
 /* Hardware text mode color constants. */
 enum vga_color {
@@ -160,18 +180,26 @@ void terminal_writenumber(const size_t number)
 
 	terminal_writestring(c);
 }
+#include "idt.c"
 
-void kernel_main(void)
+#include "interrupt.c"
+
+void kernel_main(void) 
 {
 	/* Initialize terminal interface */
 	terminal_initialize();
+	
+	idt_initialize();
 
 	/* Newline support is left as an exercise. */
 	terminal_writestring("Welcome to Developer OS.\n");
 	terminal_writestring("This is a super long line that should automatically break to a new row when it hits the end of the terminal. If it doesn't something is wrong!\n");
 	terminal_writestring("This\n should\n handle\n the\n newline\n character.\n");
+  
 	terminal_writestring("Tabbing\t like\t crazy.\t PS.\t switch\t is\t the\t best\t control\t flow\t operator\t in\t the\t C\t language\t.\n");
 	terminal_writestring("A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ\n");
 	
 	terminal_writenumber(11230);
+	terminal_writestring("A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ");
+	asm volatile ("int $0x3"); // NOTE(Oskar): Triggers an ISR interrupt.
 }

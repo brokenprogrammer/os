@@ -17,3 +17,9 @@ the initial development of this system.
 [Why do I need a Cross Compiler?](https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler)
 
 [OS Dev](https://wiki.osdev.org/Main_Page)
+
+[System V ABI (Specification for calling conventions, obj file formats, exe formats etc..)](https://wiki.osdev.org/System_V_ABI)
+
+[Interrupt Descriptor Table (IDT)](https://wiki.osdev.org/Interrupt_Descriptor_Table)
+
+[Interrupt Service Routines (ISR)](https://wiki.osdev.org/Interrupt_Service_Routines)
