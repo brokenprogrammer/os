@@ -1,5 +1,7 @@
-#include <stddef.h>		// NOTE(Oskar): Helper defines, size_t 
-#include <stdint.h>		// NOTE(Oskar): Integer defines, int8_t, int32_t etc..
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include "../libc/itoa.c"
 
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -179,7 +181,16 @@ void terminal_writestring(const char* data)
 	terminal_write(data, strlen(data));
 }
 
+void terminal_writenumber(const size_t number)
+  	char buffer [33];
+
+  	const char * c = itoa(number, buffer, 10);
+{
+
+	terminal_writestring(c);
+}
 #include "idt.c"
+
 #include "interrupt.c"
 
 void kernel_main(void) 
@@ -195,6 +206,9 @@ void kernel_main(void)
 	terminal_writestring("This\n should\n handle\n the\n newline\n character.\n");
   
 	terminal_writestring("Tabbing\t like\t crazy.\t PS.\t switch\t is\t the\t best\t control\t flow\t operator\t in\t the\t C\t language\t.\n");
+	terminal_writestring("A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ\n");
+	
+	terminal_writenumber(11230);
 	terminal_writestring("A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ");
   asm volatile ("int $0x3"); // NOTE(Oskar): Triggers an ISR interrupt.
 }
