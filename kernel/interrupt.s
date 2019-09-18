@@ -21,6 +21,13 @@
     .size isr\id, . - isr\id
 .endm
 
+# add macro for IRQs (much like above) call interrupt_handler_prepare (will prob not need to modify)
+
+# ---
+
+# isr = interrupt service routine
+# irq = interrupt request
+
 isr 0
 isr 1
 isr 2

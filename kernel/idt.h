@@ -14,24 +14,24 @@
 
 struct idt_entry
 {
-    u16 HandlerLow;     // NOTE(Oskar): Lower 16 bits of the handler to jump to when this interrupt is triggered.
-    u16 Selector;       // NOTE(Oskar): Kernel segment selector.
-    u8 IST;             // NOTE(Oskar): Must be zero.
-    u8 Flags;           // NOTE(Oskar): Flags. TODO(Oskar): Add more info?
-    u16 HandlerHigh;    // NOTE(Oskar): Upper 16 bits of the handler to jump to.
+    u16 HandlerLow;  // NOTE(Oskar): Lower 16 bits of the handler to jump to when this interrupt is triggered.
+    u16 Selector;    // NOTE(Oskar): Kernel segment selector.
+    u8 IST;          // NOTE(Oskar): Must be zero.
+    u8 Flags;        // NOTE(Oskar): Flags. TODO(Oskar): Add more info?
+    u16 HandlerHigh; // NOTE(Oskar): Upper 16 bits of the handler to jump to.
 };
 
 // NOTE(Oskar): Theese functions are defined in interrupt.s
-extern void isr0 ();
-extern void isr1 ();
-extern void isr2 ();
-extern void isr3 ();
-extern void isr4 ();
-extern void isr5 ();
-extern void isr6 ();
-extern void isr7 ();
-extern void isr8 ();
-extern void isr9 ();
+extern void isr0();
+extern void isr1();
+extern void isr2();
+extern void isr3();
+extern void isr4();
+extern void isr5();
+extern void isr6();
+extern void isr7();
+extern void isr8();
+extern void isr9();
 extern void isr10();
 extern void isr11();
 extern void isr12();
@@ -54,5 +54,7 @@ extern void isr28();
 extern void isr29();
 extern void isr30();
 extern void isr31();
+
+// add extern voids for IRQs (all)
 
 #endif // IDT_H

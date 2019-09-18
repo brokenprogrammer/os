@@ -7,4 +7,6 @@ void interrupt_handler(struct interrupt_context *Context)
     {
         terminal_writestring("ISR Interrupt.\n");
     }
+
+    // add check for IRQs (will not need to be added to interrupt_context)
 }
