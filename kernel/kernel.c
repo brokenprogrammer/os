@@ -197,9 +197,8 @@ void kernel_main(void)
 	terminal_writestring("This\n should\n handle\n the\n newline\n character.\n");
   
 	terminal_writestring("Tabbing\t like\t crazy.\t PS.\t switch\t is\t the\t best\t control\t flow\t operator\t in\t the\t C\t language\t.\n");
-	terminal_writestring("A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ\n");
 	
 	terminal_writenumber(11230);
-	terminal_writestring("A\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nP\nQ\nR\nS\nT\nU\nV\nW\nX\nY\nZ");
+	terminal_writestring("\n");
 	asm volatile ("int $0x3"); // NOTE(Oskar): Triggers an ISR interrupt.
 }
