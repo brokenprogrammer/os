@@ -111,6 +111,10 @@ _start:
 	movw $(0x28 /* TSS */ | 0x3 /* RPL */), %cx
 	ltr %cx
 
+	# Here we can do a call to a kernel_early_main to do pre-main initialization
+	# where we are allowed to use bios functions.
+	# call kernel_early_main
+
 	# Set PE (Protection Enable) bit in CR0 (Control Register 0) to enter Protected Mode.
 	# Before this we need to enable A20, GDT & IDT and all BIOS functions needs to be called
 	# prior to this. We then proceed with a long jump to the kernel code segment (0x08) and specify
