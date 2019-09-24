@@ -65,6 +65,17 @@ _start:
 	*/
 	mov $stack_top, %esp
 
+	/*
+	This is a good place to initialize crucial processor state before the
+	high-level kernel is entered. It's best to minimize the early
+	environment where crucial features are offline. Note that the
+	processor is not fully initialized yet: Features such as floating
+	point instructions and instruction set extensions are not initialized
+	yet. The GDT should be loaded here. Paging should be enabled here.
+	C++ features such as global constructors and exceptions will require
+	runtime support to work as well.
+	*/
+ 
 	# Finish installing the Task Switch Segment into the Global Descriptor Table.
 	movl $tss, %ecx
 	movw %cx, GDT + 0x28 + 2
@@ -100,17 +111,13 @@ _start:
 	movw $(0x28 /* TSS */ | 0x3 /* RPL */), %cx
 	ltr %cx
 
-	/*
-	This is a good place to initialize crucial processor state before the
-	high-level kernel is entered. It's best to minimize the early
-	environment where crucial features are offline. Note that the
-	processor is not fully initialized yet: Features such as floating
-	point instructions and instruction set extensions are not initialized
-	yet. The GDT should be loaded here. Paging should be enabled here.
-	C++ features such as global constructors and exceptions will require
-	runtime support to work as well.
-	*/
- 
+	# Set PE (Protection Enable) bit in CR0 (Control Register 0) to enter Protected Mode.
+	# Before this we need to enable A20, GDT & IDT and all BIOS functions needs to be called
+	# prior to this.
+	# mov    %eax, %cr0
+	# or     $0x01, %eax
+	# mov    %cr0, %eax
+	
 	/*
 	Enter the high-level kernel. The ABI requires the stack is 16-byte
 	aligned at the time of the call instruction (which afterwards pushes
@@ -120,7 +127,7 @@ _start:
 	preserved and the call is well defined.
 	*/
 	call kernel_main
- 
+
 	/*
 	If the system has nothing more to do, put the computer into an
 	infinite loop. To do that:
