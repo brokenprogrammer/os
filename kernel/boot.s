@@ -113,11 +113,14 @@ _start:
 
 	# Set PE (Protection Enable) bit in CR0 (Control Register 0) to enter Protected Mode.
 	# Before this we need to enable A20, GDT & IDT and all BIOS functions needs to be called
-	# prior to this.
-	# mov    %eax, %cr0
-	# or     $0x01, %eax
-	# mov    %cr0, %eax
-	
+	# prior to this. We then proceed with a long jump to the kernel code segment (0x08) and specify
+	# the 32 bit align directive and should now be in protected mode.
+
+	mov    %cr0, %eax
+	or     $0x01, %eax
+	mov    %eax, %cr0
+	jmp $0x08, $kernel_code
+
 	/*
 	Enter the high-level kernel. The ABI requires the stack is 16-byte
 	aligned at the time of the call instruction (which afterwards pushes
@@ -126,8 +129,9 @@ _start:
 	stack since (pushed 0 bytes so far), so the alignment has thus been
 	preserved and the call is well defined.
 	*/
+.align 32
+kernel_code:
 	call kernel_main
-
 	/*
 	If the system has nothing more to do, put the computer into an
 	infinite loop. To do that:
