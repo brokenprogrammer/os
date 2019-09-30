@@ -64,7 +64,42 @@ _start:
 	in assembly as languages such as C cannot function without a stack.
 	*/
 	mov $stack_top, %esp
- 
+
+	# Finish installing the Task Switch Segment into the Global Descriptor Table.
+	movl $tss, %ecx
+	movw %cx, GDT + 0x28 + 2
+	shrl $16, %ecx
+	movb %cl, GDT + 0x28 + 4
+	shrl $8, %ecx
+	movb %cl, GDT + 0x28 + 7
+
+	# Load the Global Descriptor Table pointer register.
+	subl $6, %esp
+	movw GDTSizeMinusOne, %cx
+	movw %cx, 0(%esp)
+	movl $GDT, %ecx
+	movl %ecx, 2(%esp)
+	lgdt 0(%esp)
+	addl $6, %esp
+
+	# Switch cs to the kernel code segment (0x08)
+	push $0x08
+	push $1f
+	retf
+
+1:
+	# Switch ds, es, fs, gs, ss to the kernel data segment (0x10)
+	movw $0x10, %cx
+	movw %cx, %ds
+	movw %cx, %es
+	movw %cx, %fs
+	movw %cx, %gs
+	movw %cx, %ss
+
+	# Switch the task switch segment register to the task switch segment (0x28).
+	movw $(0x28 /* TSS */ | 0x3 /* RPL */), %cx
+	ltr %cx
+
 	/*
 	This is a good place to initialize crucial processor state before the
 	high-level kernel is entered. It's best to minimize the early
