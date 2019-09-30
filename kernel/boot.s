@@ -75,7 +75,7 @@ _start:
 	C++ features such as global constructors and exceptions will require
 	runtime support to work as well.
 	*/
- 
+
 	# Finish installing the Task Switch Segment into the Global Descriptor Table.
 	movl $tss, %ecx
 	movw %cx, GDT + 0x28 + 2
@@ -114,6 +114,9 @@ _start:
 	# Here we can do a call to a kernel_early_main to do pre-main initialization
 	# where we are allowed to use bios functions.
 	# call kernel_early_main
+
+	# call Init_PIC
+	# call IsA20Enabled
 
 	# Set PE (Protection Enable) bit in CR0 (Control Register 0) to enter Protected Mode.
 	# Before this we need to enable A20, GDT & IDT and all BIOS functions needs to be called
@@ -157,3 +160,13 @@ Set the size of the _start symbol to the current location '.' minus its start.
 This is useful when debugging or when you implement call tracing.
 */
 .size _start, . - _start
+
+.align 16
+
+# Linux uses this code.
+# The idea is that some systems issue port I/O instructions
+# faster than the device hardware can deal with them.
+# TODO(Oskar): Keeping this here for when A20 should be enabled.. 
+Delay:
+	jmp	.done
+.done:	ret
