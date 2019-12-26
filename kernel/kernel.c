@@ -180,8 +180,8 @@ void terminal_writenumber(const size_t number)
 
 	terminal_writestring(c);
 }
-#include "idt.c"
 
+#include "idt.c"
 #include "interrupt.c"
 
 void kernel_main(void) 

@@ -1,8 +1,9 @@
 SET "minGW=C:\MinGW\bin"
 SET "gcc=D:\i686-elf\bin"
+SET "nasm=D:\Program Files (x86)\NASM"
 SET "qemu=D:\Program Files (x86)\qemu"
 
-SET "PATH=%minGW%;%gcc%;%qemu%;%PATH%"
+SET "PATH=%minGW%;%gcc%;%qemu%;%nasm%;%PATH%"
 
 IF NOT EXIST /build mkdir build
 
