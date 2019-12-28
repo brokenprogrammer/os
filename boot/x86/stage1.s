@@ -1,5 +1,5 @@
 [bits 16]
-[org 0x7C00]
+[org 0x7C00] ; Address for BIOS INT 0x19.
 
 %define superblock 0x8000
 %define temporary_load_buffer 0x9000
