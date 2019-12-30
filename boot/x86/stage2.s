@@ -18,10 +18,10 @@ start:
     push cs
     pop ds
 
-    mov si, Msg
+    mov si, msg
     call Print
 
     cli
     hlt
 
-Msg	db	"Preparing to load operating system...",13,10,0
+msg:	db	"Preparing to load operating system...",13,10,0

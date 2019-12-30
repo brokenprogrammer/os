@@ -1,52 +1,37 @@
-# clear
-# echo "Starting OS build..."
+clear
 
-# export DRIVE=/dev/loop11
-# export PARTITION_OFFSET=2048
-# export OS_FOLDER=build
-
-# mkdir -p build
-
-# # TODO(Oskar): Create disk image for building?
-
-# echo "Creating MBR..."
-# # Build and install the MBR
-# nasm -fbin boot/x86/mbr.s -o build/mbr
-
-# echo "Building bootloader..."
-# nasm -fbin boot/x86/stage1.s -o build/stage1
-# nasm -fbin boot/x86/stage2.s -o build/stage2
-
-# echo "Compiling the kernel..."
-
-# echo "Complete..."
-
-export DRIVE_RAW=drive
+export DRIVE_RAW=hdd.img
 export DRIVE=/dev/loop11
 export PARTITION_OFFSET=2048
 export OS_FOLDER=os
 
 mkdir -p build
-mkdir -p mount
-# TODO(Oskar): Create drive file if not exists.
+sleep 0.5s
+mkdir -p build/os
+sleep 0.5s
+# mkdir -p mount
 
 echo "Setting up loop device..."
 # Setup the first partition on the drive as the loop device
 sudo losetup $DRIVE $DRIVE_RAW -o $((512 * $PARTITION_OFFSET))
+sleep 0.5s
+
+echo "Formatting the loop device to ext2..."
+sudo mke2fs -F $DRIVE
+sleep 0.5s
 
 echo "Mounting loop device..."
 # Mount the loop device
-
-# TODO(Oskar): Make the loop device EXT2 formatted before being able to mount
-sudo mkfs -t ext2 $DRIVE
-
-sudo mount $DRIVE mount
+sudo mount -t ext2 $DRIVE mount
 sudo chmod 777 mount
+sudo chmod 777 build
+sudo chmod 777 $DRIVE_RAW
+sleep 0.5s
 
 echo "Creating MBR..."
 # Build and install the MBR
 nasm -fbin boot/x86/mbr.s -o build/mbr
-sudo dd if=build/mbr of=$DRIVE_RAW bs=436 count=1 conv=notrunc status=none
+sudo dd if=build/mbr of=$DRIVE_RAW bs=446 count=1 conv=notrunc status=none
 
 echo "Installing bootloader..."
 # Build and install the bootloader at the start of the partition
@@ -56,15 +41,17 @@ nasm -fbin boot/x86/stage2.s -o build/$OS_FOLDER/boot
 
 echo "Compiling the kernel..."
 # Build and link the kernel
-./compile.sh
+# ./compile.sh
 
 echo "Creating the bootfsid file..."
 # Create a bootfsid file
 echo -n 1234 > build/os/bootfsid
+sleep 1.0s
 
-# echo "Copying the files to the drive..."
-# # Copy the bin directory to the mount
-# cp -r bin/* mount/
+echo "Copying the files to the drive..."
+# Copy the bin directory to the mount
+sudo cp -r build/* mount
+sleep 0.5s
 
 echo "Unmounting the loop device..."
 # Unmount the loop device
