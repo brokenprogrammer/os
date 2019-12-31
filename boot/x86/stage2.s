@@ -14,14 +14,35 @@ PrintDone:
 			ret		; we are done, so return
 
 start:
-    cli
-    push cs
-    pop ds
-
     mov si, msg
     call Print
+
+    cmp dword [page_table_allocation_location], 0x2000
+    je .set_stack
+
+    .set_stack:
+    mov esp,0x7C00
+
+    ; Save Stage 1 boot information
+    mov [drive_number],dl
+    mov [partition_entry],si
+
+; TODO(Oskar): PCI
+; TODO(Oskar): Video Mode
+; TODO(Oskar): Upper & Lower Memory
+; TODO(Oskar): A20
+; TODO(Oskar): Protected mode
+; TODO(Oskar): Paging
+; TODO(Oskar): GDT
+; TODO(Oskar): Load Kernel
+
 
     cli
     hlt
 
-msg:	db	"Preparing to load operating system...",13,10,0
+drive_number: db 0
+partition_entry: dw 0
+
+page_table_allocation_location: dq 0x2000
+
+msg:	db	"Starting stage 2 boot...",13,10,0
