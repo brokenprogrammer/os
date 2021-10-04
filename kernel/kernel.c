@@ -77,7 +77,7 @@ void kernel_main(void)
 
 	terminal_writestring("\n\n");
 
-	terminal_setcolor(VGA_COLOR_BLACK);
+	terminal_setcolor(VGA_COLOR_LIGHT_GREY);
 
 	asm volatile ("int $0x3"); // NOTE(Oskar): Triggers an ISR interrupt.
 }
