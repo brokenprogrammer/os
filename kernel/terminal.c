@@ -85,6 +85,11 @@ void terminal_setcolor(uint8_t color)
 	terminal_color = color;
 }
 
+void terminal_set_break_row_condition(uint8_t break_row_condition)
+{
+	terminal_break_row_condition = break_row_condition;
+}
+
 // NOTE(Alan): This does not escape any trailing white spaces, it probably shouldn't format the input in any way (other than breaking rows)
 void terminal_writestring(const char* data)
 {

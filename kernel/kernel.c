@@ -57,7 +57,15 @@ void kernel_main(void)
 	
 	terminal_writestring("\n\n");
 
-	terminal_writestring("This is an extra super long line and it should automatically break to a new row when it hits the end of the terminal row. If it doesn't, something is wrong! Since we're using the \"break row on word\" setting, these sentences shouldn't be broken in the middle of a word, but rather before / after a whole word. As a matter of fact, I can write a whole essay here, and it will still work as expected! Isn't that just awesome!\n\nI can aslo jump down a few lines. Look how this word does not get broken up: Omphaloskepsis");
+	terminal_writestring("This is an extra super long line and it should automatically break to a new row when it hits the end of the terminal row. If it doesn't, something is wrong! Since we're using the \"break row on word\" setting, these sentences shouldn't be broken in the middle of a word, but rather before / after a whole word. As a matter of fact, I can write a whole essay here, and it will still work as expected! Isn't that just awesome!");
+
+	terminal_writestring("\n\nI can aslo jump down a few lines. Look how this word does not get broken up: Omphaloskepsis");
+
+	terminal_set_break_row_condition(BREAK_ROW_ON_CHARACTER);
+	
+	terminal_writestring("\n\nbreak_row_condition = BREAK_ROW_ON_CHARACTER. Look how this word is split: Omphaloskepsis");
+
+	terminal_set_break_row_condition(BREAK_ROW_ON_WORD);
 
 	terminal_writestring("\n\n");
 
