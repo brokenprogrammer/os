@@ -1,7 +1,7 @@
 # os
 Next generation operating system
 
-# Setup
+## Setup
 The main development environment used for this project is going to be Windows.
 A normal Windows compiler cannot be used since it will compile into an executable
 made to be run on the Windows platform. Hence a set of tools are needed before 
@@ -11,7 +11,7 @@ the initial development of this system.
 * i686-elf targeting GCC - Cross Compiler to target x86 instead of a specific platform such as Windows or Linux.
 * QEMU - Emulator able to boot the resulting .bin file without us needing to convert it to a bootable ISO file.
 
-# Links
+## Links
 [Download for i686-elf](https://github.com/lordmilko/i686-elf-tools)
 
 [Why do I need a Cross Compiler?](https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler)
@@ -23,3 +23,18 @@ the initial development of this system.
 [Interrupt Descriptor Table (IDT)](https://wiki.osdev.org/Interrupt_Descriptor_Table)
 
 [Interrupt Service Routines (ISR)](https://wiki.osdev.org/Interrupt_Service_Routines)
+
+## Contributing
+
+### Coding conventions
+
+This project uses a so-called "unity build" which aims to include all (most) of the source code in one (or a few) compilation unit(s). The reasoning behind this is to simplify the file structure and reduce build times, since it means the compiler has to do less compilation and linking. 
+
+This has some implications though, that you as a contributor need to understand and follow.
+
+1. declare types in header files
+1. declare functions in source files 
+1. define functions as `static` (or `internal`), so they don't get replicated - ALAN: Exmplain
+1. include source files in - and only in - `kernel.c`, which is the entry point of the OS
+    - source files that are added in `kernel.c` will be available in all source files of the same compilation unit
+    - ALAN: How to handle circular dependencies / forward declaration?
