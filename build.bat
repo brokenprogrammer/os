@@ -1,3 +1,5 @@
+@echo off
+
 SET "minGW=C:\MinGW\bin"
 SET "gcc=D:\i686-elf\bin"
 SET "qemu=D:\Program Files (x86)\qemu"
